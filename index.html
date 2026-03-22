@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SrulLogic Elite | מקלדת הפוכה וניהול פרויקטים</title>
+    <meta name="description" content="תיקון מקלדת הפוכה במהירות. עברו בין גרסאות האתר ונהלו את כל דפי הפרויקט במקום אחד.">
+    
+    <style>
+        :root { 
+            --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; --text: #1e293b;
+        }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text);
+            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; 
+        }
+
+        /* ניווט פנימי */
+        nav {
+            width: 100%; background: white; padding: 15px 0; display: flex; justify-content: center;
+            gap: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px;
+        }
+        .nav-btn {
+            background: none; border: none; font-weight: 700; cursor: pointer;
+            color: #64748b; font-size: 1rem; padding: 8px 16px; border-radius: 10px; transition: 0.3s;
+        }
+        .nav-btn.active { background: var(--primary); color: white; }
+
+        .container { width: 90%; max-width: 450px; }
+        .card { 
+            background: var(--card); padding: 30px; border-radius: 24px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center;
+        }
+
+        /* מניעת קפיצת לוגו */
+        .logo-area {
+            width: 85px; height: 85px; margin: 0 auto 15px; border-radius: 20px;
+            background: #fff; border: 1px solid #e2e8f0; display: flex;
+            align-items: center; justify-content: center; overflow: hidden;
+        }
+        .logo-area img { width: 100%; height: 100%; object-fit: cover; }
+
+        h1 { margin: 0; font-size: 1.7rem; color: var(--primary); font-weight: 800; }
+        .sub-text { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; font-weight: 600; }
+
+        /* כפתורי מצבים ותצוגה */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .mode-switch { display: flex; background: #f1f5f9; padding: 5px; border-radius: 12px; margin-bottom: 15px; }
+        .m-tab { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-weight: 700; border-radius: 10px; color: #64748b; }
+        .m-tab.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        textarea { 
+            width: 100%; height: 90px; border-radius: 15px; border: 1px solid #e2e8f0; 
+            padding: 15px; box-sizing: border-box; resize: none; font-size: 1rem; 
+            margin-bottom: 12px; outline: none; transition: 0.2s; background: #fcfcfc;
+        }
+        textarea:focus { border-color: var(--primary); background: #fff; }
+
+        /* רשימת דפים (במקום ה-GitHub הכללי) */
+        .project-list { text-align: right; }
+        .project-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: inherit;
+        }
+        .project-item:hover { background: #f8fafc; }
+        .file-name { font-weight: 600; color: var(--primary); }
+        .file-date { font-size: 0.75rem; color: #94a3b8; }
+
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { border: none; border-radius: 12px; padding: 12px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s; }
+        .btn-copy { background: #10b981; grid-column: span 2; }
+        .btn-wa { background: #22c55e; }
+        .btn-clear { background: #ef4444; }
+        .btn-share { background: #3b82f6; }
+        .btn-refresh { background: #64748b; }
+
+        footer { margin-top: 30px; font-size: 0.7rem; color: #94a3b8; padding-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <button class="nav-btn active" onclick="showSec('main', this)">מקלדת</button>
+    <button class="nav-btn" onclick="showSec('pages', this)">כל הדפים</button>
+</nav>
+
+<div class="container">
+    <div id="main" class="section active">
+        <div class="card">
+            <div class="logo-area">
+                <img src="logo.png" alt="S" onerror="this.src='https://via.placeholder.com/80?text=S'">
+            </div>
+            <h1>Keyboard Elite</h1>
+            <div class="sub-text">SRULLOGIC SYSTEMS</div>
+
+            <div class="mode-switch">
+                <button class="m-tab active" id="at" onclick="toggleM('auto')">אוטומטי</button>
+                <button class="m-tab" id="mn" onclick="toggleM('manual')">ידני</button>
+            </div>
+
+            <textarea id="inp" placeholder="הקלידו טקסט הפוך..."></textarea>
+            <textarea id="out" readonly placeholder="התוצאה תופיע כאן..."></textarea>
+
+            <div class="btn-grid">
+                <button class="btn btn-copy" onclick="copy()">📋 העתק תוצאה</button>
+                <button class="btn btn-wa" onclick="wa()">WhatsApp</button>
+                <button class="btn btn-clear" onclick="cl()">נקה</button>
+                <button class="btn btn-share" onclick="sh()">שתף 🔗</button>
+                <button class="btn btn-refresh" onclick="location.reload()">רענן 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pages" class="section">
+        <div class="card">
+            <h1>ארכיון דפים</h1>
+            <p class="sub-text">ניהול גרסאות SrulLogic</p>
+            
+            <div class="project-list">
+                <a href="index.html" class="project-item">
+                    <span class="file-name">index.html (נוכחי)</span>
+                    <span class="file-date">עודכן עכשיו</span>
+                </a>
+                <a href="kei1.html" class="project-item">
+                    <span class="file-name">kei1.html</span>
+                    <span class="file-date">לפני 9 דקות</span>
+                </a>
+                <a href="kei.html" class="project-item">
+                    <span class="file-name">kei.html</span>
+                    <span class="file-date">לפני 24 דקות</span>
+                </a>
+            </div>
+            <br>
+            <button class="btn btn-refresh" style="width: 100%" onclick="window.open('https://github.com/cohenisrael1/srullogic', '_blank')">צפה בקומיטים ב-GitHub 🛠️</button>
+        </div>
+    </div>
+</div>
+
+<footer>© 2026 SrulLogic Systems | All rights reserved</footer>
+
+<script>
+    const dict = {'q':'/','w':'\'','e':'ק','r':'ר','t':'א','y':'ט','u':'ו','i':'ן','o':'ם','p':'פ','a':'ש','s':'ד','d':'ג','f':'כ','g':'ע','h':'י','j':'ח','k':'ל','l':'ך',';':'ף','\'':',','z':'ז','x':'ס','c':'ב','v':'ה','b':'נ','n':'מ','m':'צ',',':'ת','.':'ץ','/':'.','ק':'e','ר':'r','א':'t','ט':'y','ו':'u','ן':'i','ם':'o','פ':'p','ש':'a','ד':'s','ג':'d','כ':'f','ע':'g','י':'h','ח':'j','ל':'k','ך':'l','ף':';',',':'\'','ז':'z','ס':'x','ב':'c','ה':'v','נ':'b','מ':'n','צ':'m','ת':',','ץ':'.','.':'/'};
+    const inp = document.getElementById('inp'), out = document.getElementById('out');
+    
+    inp.oninput = () => out.value = inp.value.split('').map(c => dict[c.toLowerCase()] || c).join('');
+
+    function showSec(id, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function toggleM(v) {
+        document.getElementById('at').classList.toggle('active', v==='auto');
+        document.getElementById('mn').classList.toggle('active', v==='manual');
+    }
+
+    function copy() { if(out.value) { navigator.clipboard.writeText(out.value); alert("הועתק! ✅"); } }
+    function cl() { inp.value = out.value = ''; }
+    function wa() { if(out.value) window.open(`https://wa.me/?text=${encodeURIComponent(out.value)}`); }
+    function sh() { if(navigator.share && out.value) navigator.share({text: out.value}); else copy(); }
+</script>
+
+</body>
+</html>
